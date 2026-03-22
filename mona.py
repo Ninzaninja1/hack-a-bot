@@ -63,6 +63,7 @@ while True:
             print(ids[i], "center:", centers[i], "\ncorners: \n", coords[i], "\n")
     
     cv2.aruco.drawDetectedMarkers(frame, corners, ids)
+    frame = draw_grid(frame, (50,50))
     cv2.imshow('Detected Markers', frame)
 
     if cv2.waitKey(1) & 0xff == ord('q'):
