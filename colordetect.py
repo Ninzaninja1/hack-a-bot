@@ -29,8 +29,8 @@ def main():
         # Convert BGR to HSV colorspace
         # final run
         frame = colordetect(frame, red_lower, red_upper, green_lower, green_upper, blue_lower, blue_upper)
-        x, y = get_grid_cell(500, 120, cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, 50, 50)
-        print(f'{x}, {y}')
+        x, y = get_grid_cell(500, 120, webcam.get(cv2.CAP_PROP_FRAME_WIDTH), webcam.get(cv2.CAP_PROP_FRAME_HEIGHT), 50, 50)
+        print(f'{x},{y}')
         cv2.imshow("Color Detection", frame)
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
@@ -94,6 +94,7 @@ def get_grid_cell(pixel_x, pixel_y, frame_width, frame_height, total_cols, total
     # Calculate how wide and tall one single cell is
     cell_width = frame_width / total_cols
     cell_height = frame_height / total_rows
+    # print(f'{cell_width},{cell_height}')
     
     # Find the index by dividing the pixel location by the cell size
     column_index = int(pixel_x / cell_width)
