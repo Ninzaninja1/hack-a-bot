@@ -60,7 +60,7 @@ while True:
     if ids is not None:
         print("Markers detected.")
         for i in range(len(ids)):
-            print(ids[i], "center:", centers[i], "corners:", coords[i])
+            print(ids[i], "center:", centers[i], "\ncorners: \n", coords[i], "\n")
     
     cv2.aruco.drawDetectedMarkers(frame, corners, ids)
     cv2.imshow('Detected Markers', frame)

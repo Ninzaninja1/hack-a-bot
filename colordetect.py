@@ -87,6 +87,8 @@ def colordetect(imageFrame, red_lower, red_upper, green_lower, green_upper, blue
             imageFrame = cv2.rectangle(imageFrame, (x, y), (x + w, y + h), (255, 0, 0), 2)
             cv2.putText(imageFrame, "Blue Colour", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0))
 
+    return imageFrame
+
 
 if __name__ == '__main__':
     main()
