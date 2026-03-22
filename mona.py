@@ -8,7 +8,7 @@ arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_100)
 arucoParams = cv2.aruco.DetectorParameters()
 
 i = 1
-coordArray = [[]]
+# test!
 
 while True:
    
