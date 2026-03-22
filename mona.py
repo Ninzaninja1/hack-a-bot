@@ -39,8 +39,9 @@ while True:
     if ids is not None:
         ids = ids.flatten()
         if 8 in ids and 2 in ids:
-            # cv2.line(frame, center_x)
+            cv2.line(frame,(center_x center_y), )
             pass
+
     # Print the detected markers
     print("Detected markers:", ids)
     cv2.aruco.drawDetectedMarkers(frame, corners, ids)
