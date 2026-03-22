@@ -18,7 +18,7 @@ def main():
     red_upper = np.array([180, 255, 255], np.uint8)
     # green color
     green_lower = np.array([25, 52, 72], np.uint8)
-    green_upper = np.array([102, 255, 255], np.uint8)
+    green_upper = np.array([65, 145, 108], np.uint8)
     # blue color
     blue_lower = np.array([94, 80, 2], np.uint8)
     blue_upper = np.array([120, 255, 255], np.uint8)
@@ -29,10 +29,11 @@ def main():
         # Convert BGR to HSV colorspace
         # final run
         frame = colordetect(frame, red_lower, red_upper, green_lower, green_upper, blue_lower, blue_upper)
+        x, y = get_grid_cell(500, 120, cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, 50, 50)
+        print(f'{x}, {y}')
         cv2.imshow("Color Detection", frame)
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
-
     webcam.release()
     cv2.destroyAllWindows()
 
@@ -89,6 +90,18 @@ def colordetect(imageFrame, red_lower, red_upper, green_lower, green_upper, blue
 
     return imageFrame
 
+def get_grid_cell(pixel_x, pixel_y, frame_width, frame_height, total_cols, total_rows):
+    # Calculate how wide and tall one single cell is
+    cell_width = frame_width / total_cols
+    cell_height = frame_height / total_rows
+    
+    # Find the index by dividing the pixel location by the cell size
+    column_index = int(pixel_x / cell_width)
+    row_index = int(pixel_y / cell_height)
+    
+    # Clamp the values so they don't accidentally go out of bounds 
+    # (e.g., if a pixel is exactly on the bottom-right edge)
+    return row_index, column_index
 
 if __name__ == '__main__':
     main()
