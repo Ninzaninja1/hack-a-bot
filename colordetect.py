@@ -1,3 +1,5 @@
+# link to medium website for source code: https://agneya.medium.com/color-detection-using-python-and-opencv-8305c29d4a42 
+
 import os
 # set this before importing cv2 to avoid wayland crashes
 os.environ["QT_QPA_PLATFORM"] = "xcb"
