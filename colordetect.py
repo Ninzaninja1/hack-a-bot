@@ -7,21 +7,36 @@ os.environ["QT_QPA_PLATFORM"] = "xcb"
 import numpy as np
 import cv2
 
-# turn on cam
-webcam = cv2.VideoCapture(0)
 
-# Set range for red color
-red_lower = np.array([136, 87, 111], np.uint8) # tobe changed
-red_upper = np.array([180, 255, 255], np.uint8)
-# green color
-green_lower = np.array([25, 52, 72], np.uint8)
-green_upper = np.array([102, 255, 255], np.uint8)
-# blue color
-blue_lower = np.array([94, 80, 2], np.uint8)
-blue_upper = np.array([120, 255, 255], np.uint8)
-while True:
-    _, imageFrame = webcam.read()
+def main():
 
+    # turn on cam
+    webcam = cv2.VideoCapture(0)
+
+    # Set range for red color
+    red_lower = np.array([136, 87, 111], np.uint8) # tobe changed
+    red_upper = np.array([180, 255, 255], np.uint8)
+    # green color
+    green_lower = np.array([25, 52, 72], np.uint8)
+    green_upper = np.array([102, 255, 255], np.uint8)
+    # blue color
+    blue_lower = np.array([94, 80, 2], np.uint8)
+    blue_upper = np.array([120, 255, 255], np.uint8)
+
+    while True:
+        _, frame = webcam.read()
+
+        # Convert BGR to HSV colorspace
+        # final run
+        frame = colordetect(frame, red_lower, red_upper, green_lower, green_upper, blue_lower, blue_upper)
+        cv2.imshow("Color Detection", frame)
+        if cv2.waitKey(10) & 0xFF == ord('q'):
+            break
+
+    webcam.release()
+    cv2.destroyAllWindows()
+
+def colordetect(imageFrame, red_lower, red_upper, green_lower, green_upper, blue_lower, blue_upper):
     # Convert BGR to HSV colorspace
     hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
 
@@ -72,10 +87,6 @@ while True:
             imageFrame = cv2.rectangle(imageFrame, (x, y), (x + w, y + h), (255, 0, 0), 2)
             cv2.putText(imageFrame, "Blue Colour", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0))
 
-    # final run
-    cv2.imshow("Color Detection", imageFrame)
-    if cv2.waitKey(10) & 0xFF == ord('q'):
-        break
 
-webcam.release()
-cv2.destroyAllWindows()
+if __name__ == '__main__':
+    main()
