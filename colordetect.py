@@ -7,11 +7,18 @@ os.environ["QT_QPA_PLATFORM"] = "xcb"
 import numpy as np
 import cv2
 
+totalRows, totalCols = 50, 50
+pixelThresh = 0.3
+gridMatrix = [totalRows][totalCols]
+
 
 def main():
 
     # turn on cam
     webcam = cv2.VideoCapture(0)
+
+    frame_width = webcam.get(cv2.CAP_PROP_FRAME_WIDTH)
+    frame_height = webcam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
     # Set range for red color
     red_lower = np.array([136, 87, 111], np.uint8) # tobe changed
@@ -29,16 +36,14 @@ def main():
         # Convert BGR to HSV colorspace
         # final run
         frame = colordetect(frame, red_lower, red_upper, green_lower, green_upper, blue_lower, blue_upper)
-        frame_width = webcam.get(cv2.CAP_PROP_FRAME_WIDTH)
-        frame_height = webcam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
-        x, y = get_grid_cell(500, 120, frame_width, frame_height, 50, 50)
+        x, y = get_grid_cell(500, 120, frame_width, frame_height, totalRows, totalCols)
 
         print(f'{x}, {y}')
         cv2.imshow("Color Detection", frame)
 
 
-        if cv2.waitKey(10) & 0xFF == ord('q'):
+        if cv2.waitKey(10) & 0xFF == ord('q'): # to quit from imshow, keyboard press q
             break
     webcam.release()
     cv2.destroyAllWindows()
@@ -94,6 +99,28 @@ def colordetect(imageFrame, red_lower, red_upper, green_lower, green_upper, blue
             imageFrame = cv2.rectangle(imageFrame, (x, y), (x + w, y + h), (255, 0, 0), 2)
             cv2.putText(imageFrame, "Blue Colour", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0))
 
+    for row in range(totalRows):
+            for col in range(totalCols):
+                
+                # Find pixel boundaries for this cell
+                top_y = int(row * cell_height)
+                bottom_y = int((row + 1) * cell_height)
+                left_x = int(col * cell_width)
+                right_x = int((col + 1) * cell_width)
+
+                # Extract just this cell's region from the mask
+                cell_mask = red_mask[top_y:bottom_y, left_x:right_x]
+
+                # Count the white (red) pixels in this cell
+                active_pixel_count = cv2.countNonZero(cell_mask)
+
+                # 4. Check against threshold
+                if (active_pixel_count / pixels_per_cell) > THRESHOLD_PERCENTAGE:
+                    grid_matrix[row][col] = 1
+                    
+                    # Draw a filled red rectangle on the overlay
+                    cv2.rectangle(overlay, (left_x, top_y), (right_x, bottom_y), (0, 0, 255), -1)
+    
     return imageFrame
 
 def get_grid_cell(pixel_x, pixel_y, frame_width, frame_height, total_cols, total_rows):
