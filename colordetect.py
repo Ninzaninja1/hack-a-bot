@@ -36,6 +36,8 @@ def main():
 
         print(f'{x}, {y}')
         cv2.imshow("Color Detection", frame)
+
+
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
     webcam.release()
@@ -104,9 +106,24 @@ def get_grid_cell(pixel_x, pixel_y, frame_width, frame_height, total_cols, total
     column_index = int(pixel_x / cell_width)
     row_index = int(pixel_y / cell_height)
     
-    # Clamp the values so they don't accidentally go out of bounds 
-    # (e.g., if a pixel is exactly on the bottom-right edge)
     return row_index, column_index
+
+def draw_grid(img, grid_shape, color=(0, 0, 255), thickness=1):
+    h, w, _ = img.shape
+    rows, cols = grid_shape
+    dy, dx = h / rows, w / cols
+
+    # draw vertical lines
+    for x in np.linspace(start=dx, stop=w-dx, num=cols-1):
+        x = int(round(x))
+        cv2.line(img, (x, 0), (x, h), color=color, thickness=thickness)
+
+    # draw horizontal lines
+    for y in np.linspace(start=dy, stop=h-dy, num=rows-1):
+        y = int(round(y))
+        cv2.line(img, (0, y), (w, y), color=color, thickness=thickness)
+
+    return img
 
 if __name__ == '__main__':
     main()

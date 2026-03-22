@@ -19,6 +19,7 @@ def draw_grid(img, grid_shape, color=(0, 0, 255), thickness=1):
         cv2.line(img, (0, y), (w, y), color=color, thickness=thickness)
 
     return img
+
 import os
 os.environ["QT_QPA_PLATFORM"] = "xcb" 
 import cv2
