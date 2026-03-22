@@ -19,27 +19,27 @@ while True:
     corners, ids, rejected = detector.detectMarkers(gray)
     
     num_detected_ids = len(corners)
-    coords = [0] * num_detected_ids
+    centers = [0] * num_detected_ids
+    coords = [[0] * num_detected_ids] * 4
     
     for i in range(len(corners)):
     
         # isolate the 4 corners of the current marker
         marker_corners = corners[i][0] 
+        coords[i] = corners[i][0]
 
         # average the x and y columns simultaneously 
         center_x, center_y = marker_corners.mean(axis=0)
-
         # cast them to integers if you plan to draw them on the frame
         center_x = int(center_x)
         center_y = int(center_y)
-
-        coords[i] = [center_x, center_y]
+        centers[i] = [center_x, center_y]
         
     # Print the detected markers
     if ids is not None:
         print("Markers detected.")
-        for i in range(len(coords)):
-            print(ids[i], coords[i])
+        for i in range(len(ids)):
+            print(ids[i], "center:", centers[i], "corners:", coords[i])
     
     cv2.aruco.drawDetectedMarkers(frame, corners, ids)
     cv2.imshow('Detected Markers', frame)
